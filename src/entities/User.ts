@@ -1,7 +1,10 @@
-import { Entity, Generated, Column, PrimaryColumn } from "typeorm";
+import { Entity, Generated, Column, PrimaryColumn, OneToMany } from "typeorm";
+
+import { Person } from "./../abstracts/Person";
+import { Permission } from "./Permission";
 
 @Entity()
-export class User {
+export class User extends Person {
   @PrimaryColumn("uuid")
   @Generated("uuid")
   id: string;
@@ -24,4 +27,7 @@ export class User {
     length: 255,
   })
   token: string;
+
+  @OneToMany((type) => Permission, (permission) => permission.user)
+  permissions: Permission[];
 }

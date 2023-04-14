@@ -1,4 +1,12 @@
-import { Entity, Column, Generated, PrimaryColumn } from "typeorm";
+import {
+  Entity,
+  Column,
+  Generated,
+  PrimaryColumn,
+  ManyToOne,
+  Unique,
+} from "typeorm";
+import { User } from "./User";
 
 export enum Action {
   CREATE = "create",
@@ -13,6 +21,7 @@ export enum Doctype {
 }
 
 @Entity()
+@Unique(["doctype", "action", "user"])
 export class Permission {
   @PrimaryColumn("uuid")
   @Generated("uuid")
@@ -29,4 +38,7 @@ export class Permission {
     enum: Action,
   })
   action: Action;
+
+  @ManyToOne((type) => User, (user) => user.permissions)
+  user: User;
 }

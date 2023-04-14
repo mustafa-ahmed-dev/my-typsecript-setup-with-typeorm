@@ -1,5 +1,5 @@
 import { AppDataSource } from "../data-source";
-import { User } from "../entities";
+import { User } from "../entities/User";
 
 import express from "express";
 import cors from "cors";

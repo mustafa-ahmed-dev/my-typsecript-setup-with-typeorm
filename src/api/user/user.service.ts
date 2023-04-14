@@ -1,8 +1,8 @@
 // entity
-import { User } from "./../../entities";
+import { User } from "./../../entities/User";
 
 // enums
-import { Doctype } from "./../types/enums";
+import { Doctype } from "./../../entities/Permission";
 
 // service
 import Service from "../../abstracts/Service";

@@ -1,7 +1,7 @@
 import { Router, Request, Response, NextFunction } from "express";
 
 import Controller from "../../abstracts/Controller";
-import { User } from "./../../entities";
+import { User } from "./../../entities/User";
 
 // User functionality
 import UserService from "./user.service";
