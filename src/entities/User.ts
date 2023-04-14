@@ -1,8 +1,8 @@
 import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
-import { Gender } from "./../api/admin/admin.validation";
+import { Gender } from "../api/types/enums";
 
 @Entity()
-export class Admin {
+export class User {
   @PrimaryGeneratedColumn()
   id: number;
 

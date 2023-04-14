@@ -1,9 +1,6 @@
 import { z } from "zod";
 
-export enum Gender {
-  MALE = "male",
-  FEMALE = "female",
-}
+import { Gender } from "../types/enums";
 
 export const IdSchema = z.object({
   params: z.object({
@@ -11,7 +8,7 @@ export const IdSchema = z.object({
   }),
 });
 
-export const AdminSchema = z.object({
+export const UserSchema = z.object({
   body: z.object({
     name: z.string().min(4).max(30),
     dateOfBirth: z.string().min(4),
@@ -20,6 +17,6 @@ export const AdminSchema = z.object({
 });
 
 type Id = z.infer<typeof IdSchema>["params"];
-type AdminData = z.infer<typeof AdminSchema>["body"];
+type UserData = z.infer<typeof UserSchema>["body"];
 
-export { Id, AdminData };
+export { Id, UserData };

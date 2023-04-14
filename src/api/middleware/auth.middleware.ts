@@ -6,7 +6,7 @@ import { verifyToken } from "./../helpers/jwt.helper";
 
 const authMiddleware = async (
   request: Request,
-  response: Response,
+  _response: Response,
   next: NextFunction
 ) => {
   const authHeader = request.headers["authorization"];
@@ -14,7 +14,7 @@ const authMiddleware = async (
 
   if (!token) return next(new UnauthorizedError("No token were provided"));
 
-  const [payload, error] = <[any, any]>await asyncHandler(verifyToken(token));
+  const [_payload, error] = <[any, any]>await asyncHandler(verifyToken(token));
 
   if (error) {
     next(error);

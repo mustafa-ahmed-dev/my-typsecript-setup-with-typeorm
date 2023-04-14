@@ -1,30 +1,33 @@
-import { Admin, PrismaClient, PermissionType, DocType } from "@prisma/client";
 import { Router, Request, Response, NextFunction } from "express";
 
-import Controller from "./../../abstracts/Controller";
+import Controller from "../../abstracts/Controller";
+import { User } from "./../../entities";
 
-// Admin functionality
-import AdminService from "./admin.service";
-import { Id, AdminData, IdSchema, AdminSchema } from "./admin.validation";
+// User functionality
+import UserService from "./user.service";
+import { Id, UserData, IdSchema, UserSchema } from "./user.validation";
+
+// Enums
+import { Action, Gender, Doctype } from "./../types/enums";
 
 // Middleware
 import validationMiddleware from "../middleware/validation.middleware";
-import authMiddleware from "./../middleware/auth.middleware";
-import permissionsMiddleware from "./../middleware/permissions.middleware";
+import authMiddleware from "../middleware/auth.middleware";
+import permissionsMiddleware from "../middleware/permissions.middleware";
 
 // Helpers
 import asyncHandler from "../helpers/asyncHandler.helper";
 import { hashPassword, verifyPassword } from "../helpers/hashPassword.helper";
-import { signToken } from "./../helpers/jwt.helper";
-import logger from "./../helpers/logger.helper";
+import { signToken } from "../helpers/jwt.helper";
+import logger from "../helpers/logger.helper";
 
 // Errors
-import NotFoundError from "./../../errors/NotFoundError";
-import ConflictError from "./../../errors/ConflictError";
-import InternalServerError from "./../../errors/InternalServerError";
-import UnauthorizedError from "./../../errors/UnauthorizedError";
+import NotFoundError from "../../errors/NotFoundError";
+import ConflictError from "../../errors/ConflictError";
+import InternalServerError from "../../errors/InternalServerError";
+import UnauthorizedError from "../../errors/UnauthorizedError";
 
-class AdminController extends Controller {
+class UserController extends Controller {
   public routes = {
     getAll: "",
     getOne: "/:id",
@@ -38,15 +41,13 @@ class AdminController extends Controller {
   };
   public router: Router;
 
-  private service: AdminService;
-  private prisma: PrismaClient;
+  private service: UserService;
 
   constructor() {
-    super("/admins", DocType.USER);
+    super("/users", Doctype.USER);
 
     this.router = Router();
-    this.prisma = new PrismaClient();
-    this.service = new AdminService(this.prisma, this.docType);
+    this.service = new UserService(this.doctype);
 
     this.initializeRoutes();
   }
@@ -55,16 +56,14 @@ class AdminController extends Controller {
     this.router.get(
       this.routes.getAll,
       authMiddleware,
-      // : FIXME: fix permissions middleware
-      permissionsMiddleware(this.prisma, PermissionType.READ, this.docType),
+      permissionsMiddleware(Action.READ, this.doctype),
       this.getAll_route
     );
 
     this.router.get(
       this.routes.getOne,
       authMiddleware,
-      // : FIXME: fix permissions middleware
-      permissionsMiddleware(this.prisma, PermissionType.READ, this.docType),
+      permissionsMiddleware(Action.READ, this.doctype),
       validationMiddleware(IdSchema),
       this.getOne_route
     );
@@ -72,26 +71,23 @@ class AdminController extends Controller {
     this.router.get(
       this.routes.getPermissions,
       authMiddleware,
-      // : FIXME: fix permissions middleware
-      permissionsMiddleware(this.prisma, PermissionType.READ, this.docType),
+      permissionsMiddleware(Action.READ, this.doctype),
       validationMiddleware(IdSchema),
-      this.getAdminPermissions_route
+      this.getUserPermissions_route
     );
 
     this.router.post(
       this.routes.createOne,
-      // authMiddleware,
-      // : FIXME: fix permissions middleware
-      // permissionsMiddleware(this.prisma, PermissionType.CREATE, this.docType),
-      validationMiddleware(AdminSchema),
+      authMiddleware,
+      permissionsMiddleware(Action.CREATE, this.doctype),
+      validationMiddleware(UserSchema),
       this.createOne_route
     );
 
     this.router.delete(
       this.routes.deleteOne,
       authMiddleware,
-      // : FIXME: fix permissions middleware
-      permissionsMiddleware(this.prisma, PermissionType.DELETE, this.docType),
+      permissionsMiddleware(Action.DELETE, this.doctype),
       validationMiddleware(IdSchema),
       this.deleteOne_route
     );
@@ -99,9 +95,8 @@ class AdminController extends Controller {
     this.router.put(
       this.routes.updateOne,
       authMiddleware,
-      // : FIXME: fix permissions middleware
-      permissionsMiddleware(this.prisma, PermissionType.UPDATE, this.docType),
-      validationMiddleware(AdminSchema),
+      permissionsMiddleware(Action.UPDATE, this.doctype),
+      validationMiddleware(UserSchema),
       this.updateOne_route
     );
 
@@ -127,9 +122,9 @@ class AdminController extends Controller {
   }
 
   /**
-   * @desc        Gets all admins
+   * @desc        Gets all users
    * @method      GET
-   * @path        /admins
+   * @path        /users
    * @access      private
    */
   private getAll_route = async (
@@ -139,9 +134,9 @@ class AdminController extends Controller {
   ) => {};
 
   /**
-   * @desc        Gets one admin by id
+   * @desc        Gets one user by id
    * @method      GET
-   * @path        /admins
+   * @path        /users
    * @access      private
    */
   private getOne_route = async (
@@ -151,21 +146,21 @@ class AdminController extends Controller {
   ) => {};
 
   /**
-   * @desc        Creates a admin
+   * @desc        Creates a user
    * @method      GET
-   * @path        /admins/:id/permissions
+   * @path        /users/:id/permissions
    * @access      private
    */
-  private getAdminPermissions_route = async (
+  private getUserPermissions_route = async (
     request: Request,
     response: Response,
     next: NextFunction
   ) => {};
 
   /**
-   * @desc        Creates a admin
+   * @desc        Creates a user
    * @method      POST
-   * @path        /admins
+   * @path        /users
    * @access      private
    */
   private createOne_route = async (
@@ -175,9 +170,9 @@ class AdminController extends Controller {
   ) => {};
 
   /**
-   * @desc        Deletes a admin
+   * @desc        Deletes a user
    * @method      DELETE
-   * @path        /admins/:id
+   * @path        /users/:id
    * @access      private
    */
   private deleteOne_route = async (
@@ -187,9 +182,9 @@ class AdminController extends Controller {
   ) => {};
 
   /**
-   * @desc        Updates a admin
+   * @desc        Updates a user
    * @method      PUT
-   * @path        /admins/:id
+   * @path        /users/:id
    * @access      private
    */
   private updateOne_route = async (
@@ -199,9 +194,9 @@ class AdminController extends Controller {
   ) => {};
 
   /**
-   * @desc        Logins a admin
+   * @desc        Logins a user
    * @method      POST
-   * @path        /admins/login
+   * @path        /users/login
    * @access      public
    */
   private login_route = async (
@@ -211,11 +206,11 @@ class AdminController extends Controller {
   ) => {};
 
   /**
-   * @desc        Gets all admins
+   * @desc        Gets all users
    * @method      POST
-   * @path        /admins/logout
+   * @path        /users/logout
    * @access      private
-   * @note        The admin will waits a second and will be logged out
+   * @note        The user will waits a second and will be logged out
    */
   private logout_route = async (
     request: Request,
@@ -226,10 +221,9 @@ class AdminController extends Controller {
   /**
    * @desc        Refreshes an access token
    * @method      POST
-   * @path        /admins/:id/refreshtoken
+   * @path        /users/:id/refreshtoken
    * @access      private
    */
-  // : FIXME:
   private refreshToken = async (
     request: Request,
     response: Response,
@@ -237,4 +231,4 @@ class AdminController extends Controller {
   ) => {};
 }
 
-export default AdminController;
+export default UserController;

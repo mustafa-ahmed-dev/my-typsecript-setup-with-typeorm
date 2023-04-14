@@ -1,18 +1,13 @@
 import { Request, Response, NextFunction } from "express";
-import {
-  PrismaClient,
-  PermissionType,
-  DocType,
-  Permission,
-  User,
-} from "@prisma/client";
+import { PrismaClient, Permission, User } from "@prisma/client";
 
+import { Doctype, Action } from "./../types/enums";
 import asyncHandler from "./../helpers/asyncHandler.helper";
 import { decodeToken, JWTPayload } from "./../helpers/jwt.helper";
 import ForbiddenError from "./../../errors/ForbiddenError";
 
 const permissionsMiddleware =
-  (prisma: PrismaClient, permissionType: PermissionType, docType: DocType) =>
+  (permissionType: Action, docType: Doctype) =>
   async (request: Request, response: Response, next: NextFunction) => {
     const token = String(request.headers.authorization?.split(" ")[1]);
 
