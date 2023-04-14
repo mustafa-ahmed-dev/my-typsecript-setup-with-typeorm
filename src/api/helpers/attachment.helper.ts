@@ -10,10 +10,10 @@ import config from "../../config";
 
 const s3 = new S3Client({
   credentials: {
-    accessKeyId: config.s3Bucket.secretKey,
-    secretAccessKey: config.s3Bucket.secretAccessKey,
+    accessKeyId: config.aws.s3.secretAccessKey,
+    secretAccessKey: config.aws.s3.secretAccessKey,
   },
-  region: config.s3Bucket.region,
+  region: config.aws.s3.region,
 });
 
 export interface ObjectData {
@@ -24,7 +24,7 @@ export interface ObjectData {
 
 const createPutObjectCommand = async (data: ObjectData) => {
   const command = new PutObjectCommand({
-    Bucket: config.s3Bucket.name,
+    Bucket: config.aws.s3.name,
     Key: data.fileName,
     Body: data.buffer,
     ContentType: data.mimeType,
@@ -36,7 +36,7 @@ const createPutObjectCommand = async (data: ObjectData) => {
 // : TODO:
 const createDeleteObjectCommand = async (path: string) => {
   const command = new DeleteObjectCommand({
-    Bucket: config.s3Bucket.name,
+    Bucket: config.aws.s3.name,
     Key: `${path}.pdf`,
   });
 
@@ -45,7 +45,7 @@ const createDeleteObjectCommand = async (path: string) => {
 
 const createGetObjectCommand = async (path: string) => {
   const command = new GetObjectCommand({
-    Bucket: config.s3Bucket.name,
+    Bucket: config.aws.s3.name,
     Key: `${path}.pdf`,
   });
 
