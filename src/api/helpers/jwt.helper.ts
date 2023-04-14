@@ -5,8 +5,8 @@ import jwt, {
 } from "jsonwebtoken";
 
 import asyncHandler from "./asyncHandler.helper";
-import InternalServerError from "./../errors/InternalServerError";
-import UnauthorizedError from "./../errors/UnauthorizedError";
+import InternalServerError from "./../../errors/InternalServerError";
+import UnauthorizedError from "./../../errors/UnauthorizedError";
 import config from "./../../config";
 
 export interface JWTPayload {

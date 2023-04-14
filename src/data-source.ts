@@ -5,7 +5,7 @@ import { User } from "./entities";
 import config from "./config";
 
 export const AppDataSource = new DataSource({
-  type: "mysql",
+  type: "postgres",
   host: config.database.host,
   port: config.database.port,
   username: config.database.user,

@@ -13,7 +13,7 @@ import { Action, Gender, Doctype } from "./../types/enums";
 // Middleware
 import validationMiddleware from "../middleware/validation.middleware";
 import authMiddleware from "../middleware/auth.middleware";
-import permissionsMiddleware from "../middleware/permissions.middleware";
+// import permissionsMiddleware from "../middleware/permissions.middleware";
 
 // Helpers
 import asyncHandler from "../helpers/asyncHandler.helper";
@@ -56,14 +56,14 @@ class UserController extends Controller {
     this.router.get(
       this.routes.getAll,
       authMiddleware,
-      permissionsMiddleware(Action.READ, this.doctype),
+      // permissionsMiddleware(Action.READ, this.doctype),
       this.getAll_route
     );
 
     this.router.get(
       this.routes.getOne,
       authMiddleware,
-      permissionsMiddleware(Action.READ, this.doctype),
+      // permissionsMiddleware(Action.READ, this.doctype),
       validationMiddleware(IdSchema),
       this.getOne_route
     );
@@ -71,7 +71,7 @@ class UserController extends Controller {
     this.router.get(
       this.routes.getPermissions,
       authMiddleware,
-      permissionsMiddleware(Action.READ, this.doctype),
+      // permissionsMiddleware(Action.READ, this.doctype),
       validationMiddleware(IdSchema),
       this.getUserPermissions_route
     );
@@ -79,7 +79,7 @@ class UserController extends Controller {
     this.router.post(
       this.routes.createOne,
       authMiddleware,
-      permissionsMiddleware(Action.CREATE, this.doctype),
+      // permissionsMiddleware(Action.CREATE, this.doctype),
       validationMiddleware(UserSchema),
       this.createOne_route
     );
@@ -87,7 +87,7 @@ class UserController extends Controller {
     this.router.delete(
       this.routes.deleteOne,
       authMiddleware,
-      permissionsMiddleware(Action.DELETE, this.doctype),
+      // permissionsMiddleware(Action.DELETE, this.doctype),
       validationMiddleware(IdSchema),
       this.deleteOne_route
     );
@@ -95,7 +95,7 @@ class UserController extends Controller {
     this.router.put(
       this.routes.updateOne,
       authMiddleware,
-      permissionsMiddleware(Action.UPDATE, this.doctype),
+      // permissionsMiddleware(Action.UPDATE, this.doctype),
       validationMiddleware(UserSchema),
       this.updateOne_route
     );
@@ -131,7 +131,9 @@ class UserController extends Controller {
     request: Request,
     response: Response,
     next: NextFunction
-  ) => {};
+  ) => {
+    response.json({ success: true });
+  };
 
   /**
    * @desc        Gets one user by id
