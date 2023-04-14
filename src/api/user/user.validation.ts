@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { Gender } from "../types/enums";
+import { Gender } from "./../../abstracts/Person";
 
 export const IdSchema = z.object({
   params: z.object({

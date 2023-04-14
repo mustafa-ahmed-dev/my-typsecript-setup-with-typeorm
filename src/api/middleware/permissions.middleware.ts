@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { PrismaClient, Permission, User } from "@prisma/client";
 
-import { Doctype, Action } from "./../types/enums";
+import { Doctype, Action } from "./../../entities/Permission";
 import asyncHandler from "./../helpers/asyncHandler.helper";
 import { decodeToken, JWTPayload } from "./../helpers/jwt.helper";
 import ForbiddenError from "./../../errors/ForbiddenError";

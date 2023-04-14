@@ -8,7 +8,8 @@ import UserService from "./user.service";
 import { Id, UserData, IdSchema, UserSchema } from "./user.validation";
 
 // Enums
-import { Action, Gender, Doctype } from "./../types/enums";
+import { Gender } from "./../../abstracts/Person";
+import { Action, Doctype } from "./../../entities/Permission";
 
 // Middleware
 import validationMiddleware from "../middleware/validation.middleware";

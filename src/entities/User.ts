@@ -1,24 +1,27 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
-import { Gender } from "../api/types/enums";
+import { Entity, Generated, Column, PrimaryColumn } from "typeorm";
 
 @Entity()
 export class User {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryColumn("uuid")
+  @Generated("uuid")
+  id: string;
 
   @Column({
     type: "varchar",
-    length: 45,
+    length: 30,
+    unique: true,
   })
-  name: string;
-
-  @Column("date")
-  dateOfBirth: Date;
+  username: string;
 
   @Column({
-    type: "enum",
-    enum: Gender,
-    default: Gender.MALE,
+    type: "char",
+    length: 90,
   })
-  gender: Gender;
+  password: string;
+
+  @Column({
+    type: "varchar",
+    length: 255,
+  })
+  token: string;
 }
